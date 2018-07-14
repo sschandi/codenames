@@ -131,20 +131,20 @@ export default {
 }
 </script>
 
-<style>
-:root {
-  --red: #f73859;
-  --blue: #0074e4;
-  --grey: #404b69;
-  --dark-grey: #283149;
-  --white: #dbedf3;
-}
+<style lang="scss">
+$font: 'Roboto Slab', serif;
+$red: #f73859;
+$blue: #0074e4;
+$innocent: #404b69;
+$assasin: #283149;
+$default: #dbedf3;
+
 body {
-  font-family: 'Roboto Slab', serif;
+  font-family: $font;
 }
 #app {
   text-align: center;
-  color: var(--dark-grey);
+  color: $assasin;
 }
 .container {
   min-width: 500px;
