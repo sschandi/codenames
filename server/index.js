@@ -15,6 +15,7 @@ let io = socket(server)
 
 let board = new Board()
 let team = new Team()
+let turn = 'blue'
 const nicknames = []
 
 io.on('connection', function (socket) {
@@ -22,11 +23,6 @@ io.on('connection', function (socket) {
 	const names = []
 
 	socket.join('game')
-	// socket.nickname = socket.id
-	// for (socketID in io.sockets.adapter.rooms['game'].sockets) {
-	// 	const nickname = io.sockets.connected[socketID].nickname
-	// 	names.push(nickname)
-	// }
 	//Get list of client ids connected
 	console.log(connectedIDs)
 
@@ -37,13 +33,15 @@ io.on('connection', function (socket) {
 	console.log('a user connected')
 	// console.log(io.sockets.adapter.rooms['game'].sockets)
 
-	socket.on('disconnect', function(){
+	socket.on('disconnect', function() {
 		console.log('user disconnected');
 		const index = nicknames.indexOf(socket.nickname)
 		if (index !== -1) {
 			nicknames.splice(nicknames.indexOf(socket.nickname), 1)
 		}
+		team.removeByID(socket.id)
 		io.sockets.emit('getAllUsers', nicknames)
+		io.sockets.emit('getTeams', team)
 	});
 	
 	socket.on('chat', function (data) {
@@ -65,12 +63,17 @@ io.on('connection', function (socket) {
 			console.log(team)
 			io.sockets.emit('getAllUsers', nicknames)
 			io.sockets.emit('getTeams', team)
+			io.sockets.emit('getTurn', turn)
 			callback(true)
 		}
 	})
 
 	socket.on('getTeams', function () {
 		io.sockets.emit('getTeams', team)
+	})
+
+	socket.on('getTurn', function() {
+		sockets.emit('getTurn', turn)
 	})
 
 	socket.on('getSelf', function () {
@@ -87,6 +90,22 @@ io.on('connection', function (socket) {
 
 	socket.on('newGame', function () {
 		board.createNewBoard()
+		io.sockets.emit('getBoard', board.words)
+	})
+
+	socket.on('setBoard', function (board, card) {
+		board.words = board
+		if (card.type === 'assassin') {
+			io.sockets.emit('gameOver', `Game Over, ${team.getTeam(socket.id)} lost.`)
+		}
+		if (card.type !== team.getTeam(socket.id)) {
+			if (turn === 'blue') {
+				turn = 'red'
+			} else {
+				turn = 'blue'
+			}
+			io.sockets.emit('getTurn', turn)
+		}
 		io.sockets.emit('getBoard', board.words)
 	})
 })

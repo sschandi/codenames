@@ -1,10 +1,18 @@
 <template>
 	<div id="game">
 		<h1>Game</h1>
+		<p v-if="turn">Your turn</p>
+		<p v-else>Enemy's Turn</p>
 		<div class="container">
+			<p>You are <span v-if="spymaster">the spymaster</span><span v-else>a player</span></p>
 		</div>
 		<div class="container">
-			<div v-for="card in board" :key="card.name" class="card" :class="getCardClass(card.type)">
+			<div 
+				v-for="card in board" 
+				:key="card.name" class="card" 
+				:class="getCardClass(card)"
+				@click="setShowCard(card)"
+			>
 				<p>{{ card.name }}</p>
 			</div>
 		</div>
@@ -16,6 +24,7 @@ export default {
 	props: {
 		gameBoard: Array,
 		spymaster: Boolean,
+		turn: Boolean,
 	},
 	data () {
 		return {
@@ -53,13 +62,22 @@ export default {
 			}
 			return result
 		},
-		getCardClass: function (type) {
-			if (this.spymaster) {
-				return type
+		getCardClass: function (card) {
+			if (card.show) {
+				return card.type
+			} else if (this.spymaster) {
+				return `spy-${card.type}`
 			} else {
 				return ''
 			}
 		},
+		setShowCard: function (card) {
+			if (this.spymaster || !this.turn) {
+				console.log('wtf')
+				return
+			}
+			this.$emit('show-card', card)
+		}
 	}
 }
 </script>
@@ -100,8 +118,9 @@ $default: #dbedf3;
 	background-color: $default;
 }
 .spy-assassin {
-	color: $assasin;
-	background-color: $default;
+	color: $default;
+	background-color: $innocent;
+	font-weight: 700;
 }
 .spy-red {
 	color: $red;

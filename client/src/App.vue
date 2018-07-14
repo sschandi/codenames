@@ -1,10 +1,9 @@
 <template>
   <div id="app">
-    <h1>App</h1>
+    <h1>Codenames</h1>
     <p v-if="isConnected">We are connected {{ users }}</p>
     <p>{{ error }}</p>
     <p v-if="users.length < 4">Don't try to play this without 4 people ok. Waiting for 4 players...</p>
-    <button @click="getTeamData()">getteamdata</button>
     <button @click="newGame()">newGame</button>
     <div v-if="showGame == false">
       <input v-model="nickname" type="text" placeholder="enter nick name"/>
@@ -21,8 +20,14 @@
     </div>
     <!-- <button @click="getBoard()">getBoard</button>
     <button @click="getAllUsers()">UsersGet</button> -->
+    <h1 v-if="gameOver">{{ gameOver }}</h1>
     <template v-if="showGame">
-      <Game :gameBoard="gameBoard" :spymaster="isSpyMaster"/>
+      <Game 
+        :gameBoard="gameBoard" 
+        :spymaster="isSpyMaster"
+        :turn="isTurn"
+        @show-card="showCard"
+      />
     </template>
     <router-view/>
   </div>
@@ -41,13 +46,15 @@ export default {
       isConnected: false,
       users: [],
       nickname: '',
-      id: '',
+      id: null,
       error: '',
       showGame: false,
       gameBoard: [],
       teams: null,
       isSpyMaster: false,
       team: null,
+      turn: 'blue',
+      gameOver: null,
     }
   },
   sockets: {
@@ -58,7 +65,6 @@ export default {
       this.isConnected = false
     },
     getAllUsers: function (val) {
-      console.log('socket-users', val)
       this.users = val
     },
     chat: function (val) {
@@ -66,18 +72,21 @@ export default {
     },
     getBoard: function (val) {
       this.gameBoard = val
-      console.log(val)
     },
     getTeams: function (val) {
       this.teams = val
-      console.log('getteams', this.teams)
     },
     getSelf: function (val) {
       this.id = val.id
       this.isSpyMaster = val.isSpyMaster
       this.team = val.team
       this.nickname = val.nickname
-      console.log('self', val)
+    },
+    getTurn: function (val) {
+      this.turn = val
+    },
+    gameOver: function (val) {
+      this.gameOver = val
     }
   },
   created () {
@@ -94,6 +103,12 @@ export default {
         return ''
       }
       return this.teams.blue
+    },
+    isTurn() {
+      if (this.turn === this.team) {
+        return true
+      }
+      return false
     }
   },
   methods: {
@@ -119,14 +134,17 @@ export default {
     getTeams: function () {
       this.$socket.emit('getTeams')
     },
-    getTeamData: function () {
-      this.teams.red.forEach((player) => {
-        console.log('player', player)
-      })
-    },
     newGame: function () {
       this.$socket.emit('newGame')
     },
+    showCard: function (card) {
+      for (let i = 0; i < this.gameBoard.length; i++) {
+        if (this.gameBoard[i] === card) {
+          this.gameBoard[i].show = true
+        }
+      }
+      this.$socket.emit('setBoard', this.gameBoard, card)
+    }
   }
 }
 </script>

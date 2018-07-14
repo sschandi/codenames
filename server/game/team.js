@@ -28,6 +28,19 @@ class Team {
 		return this.red
 	}
 
+	removeByID(id) {
+		for (let i = 0; i < this.red.length; i++) {
+			if (this.red[i].id === id) {
+				this.red.splice(i, 1)
+			}
+		}
+		for (let i = 0; i < this.blue.length; i++) {
+			if (this.blue[i].id === id) {
+				this.blue.splice(i, 1)
+			}
+		}
+	}
+
 	getTeam(id) {
 		for (let i = 0; i < this.red.length; i++) {
 			if (this.red[i].id === id) {
