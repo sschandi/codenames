@@ -97,9 +97,14 @@ io.on('connection', function (socket) {
 		socket.emit('getSelf', self)
 	})
 
+	socket.on('getSelves', function () {
+		io.sockets.emit('getSelves')
+	})
+
 	socket.on('newGame', function () {
 		board.createNewBoard()
 		team.incrementSpymaster()
+		io.sockets.emit('gameOver', null)
 		// console.log(team)
 		turn = 'blue'
 		io.sockets.emit('getBoard', board.words)
@@ -111,6 +116,7 @@ io.on('connection', function (socket) {
 	socket.on('randomTeams', function () {
 		board.createNewBoard()
 		team.createNewTeams()
+		io.sockets.emit('gameOver', null)
 		// console.log(team)
 		turn = 'blue'
 		io.sockets.emit('getBoard', board.words)

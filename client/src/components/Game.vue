@@ -70,12 +70,11 @@ export default {
 			} else if (this.spymaster) {
 				return `spy-${card.type}`
 			} else {
-				return ''
+				return 'pointer'
 			}
 		},
 		setShowCard: function (card) {
 			if (this.spymaster || !this.turn) {
-				console.log('wtf')
 				return
 			}
 			this.$emit('show-card', card)
@@ -92,12 +91,16 @@ $assasin: #283149;
 $default: #dbedf3;
 
 .card {
-	width: 20%;
+	width: 19%;
+	margin: .5%;
 	height: 100px;
 	background-color: $default;
 	display: flex;
 	align-items: center;
 	justify-content: center;
+}
+.pointer {
+	cursor: pointer;
 }
 .innocent {
 	background-color: $innocent;

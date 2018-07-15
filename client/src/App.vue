@@ -8,23 +8,23 @@
       <button @click="setName()">Set</button>
     </div>
     <div v-else>
-      <h3>Hello {{ nickname }}</h3>
+      <h2>Hello {{ nickname }}</h2>
       <div class="container">
         <div class="team-blue">
           <h2>Blue Team</h2>
           <p v-if="teams" v-for="blue in blueTeam" :key="blue.id">
-            {{ blue.name }}:
             <span v-if="blue.isSpyMaster">Spymaster</span>
-            <span v-else>Player</span>
+            <span v-else>Player</span>:
+            {{ blue.name }}
             <span v-if="blue.id === id">(YOU)</span>
           </p>
         </div>
         <div class="team-red">
           <h2>Red Team</h2>
           <p v-if="teams" v-for="red in redTeam" :key="red.id">
-            {{ red.name }}:
             <span v-if="red.isSpyMaster">Spymaster</span>
-            <span v-else>Player</span>
+            <span v-else>Player</span>:
+            {{ red.name }}
             <span v-if="red.id === id">(YOU)</span>
           </p>
         </div>
@@ -103,6 +103,9 @@ export default {
       this.team = val.team
       this.nickname = val.nickname
     },
+    getSelves: function () {
+      this.$socket.emit('getSelf')
+    },
     getTurn: function (val) {
       this.turn = val
     },
@@ -157,11 +160,11 @@ export default {
     },
     newGame: function () {
       this.$socket.emit('newGame')
-      this.$socket.emit('getSelf')
+      this.$socket.emit('getSelves')
     },
     randomTeams: function () {
       this.$socket.emit('randomTeams')
-      this.$socket.emit('getSelf')
+      this.$socket.emit('getSelves')
     },
     endTurn: function () {
       this.$socket.emit('endTurn')
