@@ -90,13 +90,22 @@ io.on('connection', function (socket) {
 
 	socket.on('newGame', function () {
 		board.createNewBoard()
+		team.incrementSpymaster()
+		console.log(team)
 		io.sockets.emit('getBoard', board.words)
+		io.sockets.emit('getAllUsers', nicknames)
+		io.sockets.emit('getTeams', team)
+		io.sockets.emit('getTurn', turn)
 	})
 
 	socket.on('setBoard', function (board, card) {
 		board.words = board
 		if (card.type === 'assassin') {
 			io.sockets.emit('gameOver', `Game Over, ${team.getTeam(socket.id)} lost.`)
+		} else if (didBlueWin(board) === 9) {
+			io.sockets.emit('gameOver', `Blue winned.`)
+		} else if (didRedWin(board) === 8) {
+			io.sockets.emit('gameOver', `Red winned.`)
 		}
 		if (card.type !== team.getTeam(socket.id)) {
 			if (turn === 'blue') {
@@ -109,3 +118,23 @@ io.on('connection', function (socket) {
 		io.sockets.emit('getBoard', board.words)
 	})
 })
+
+function didBlueWin(board) {
+	let blueWin = 0
+	for (let i = 0; i < board.length; i++) {
+		if (board[i].show && (board[i].type === 'blue')) {
+			blueWin += 1
+		}
+	}
+	return blueWin
+}
+
+function didRedWin(board) {
+	let redWin = 0
+	for (let i = 0; i < board.length; i++) {
+		if (board[i].show && (board[i].type === 'red')) {
+			redWin += 1
+		}
+	}
+	return redWin
+}

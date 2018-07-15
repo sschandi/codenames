@@ -28,6 +28,27 @@ class Team {
 		return this.red
 	}
 
+	incrementSpymaster() {
+		const newRed = []
+		const newBlue = []
+		for (let i = this.red.length - 1; i >= 0; i--) {
+			this.red[i].isSpyMaster = false
+			newRed.push(this.red[i])
+		}
+		for (let i = this.blue.length - 1; i >= 0; i--) {
+			this.blue[i].isSpyMaster = false
+			newBlue.push(this.blue[i])
+		}
+		if (newRed.length > 0) {
+			newRed[0].isSpyMaster = true
+		}
+		if (newBlue.length > 0) {
+			newBlue[0].isSpyMaster = true
+		}
+		this.red = newRed
+		this.blue = newBlue
+	}
+
 	removeByID(id) {
 		for (let i = 0; i < this.red.length; i++) {
 			if (this.red[i].id === id) {
