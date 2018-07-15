@@ -5,6 +5,7 @@
     <p>{{ error }}</p>
     <p v-if="users.length < 4">Don't try to play this without 4 people ok. Waiting for 4 players...</p>
     <button @click="newGame()">newGame</button>
+    <button @click="randomTeams()">newGame shuffle teams</button>
     <div v-if="showGame == false">
       <input v-model="nickname" type="text" placeholder="enter nick name"/>
       <button @click="setName()">Set</button>
@@ -136,6 +137,9 @@ export default {
     },
     newGame: function () {
       this.$socket.emit('newGame')
+    },
+    randomTeams: function () {
+      this.$socket.emit('randomTeams')
     },
     showCard: function (card) {
       for (let i = 0; i < this.gameBoard.length; i++) {

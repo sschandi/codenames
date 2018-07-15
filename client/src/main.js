@@ -7,6 +7,7 @@ import socketio from 'socket.io-client'
 import VueSocketIO from 'vue-socket.io'
 
 export const SocketInstance = socketio('http://localhost:4000')
+// export const SocketInstance = socketio('https://ronchon-madame-43303.herokuapp.com')
 
 Vue.use(VueSocketIO, SocketInstance)
 

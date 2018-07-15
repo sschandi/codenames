@@ -49,6 +49,27 @@ class Team {
 		this.blue = newBlue
 	}
 
+	createNewTeams() {
+		let playerPool = this.shufflePlayers(this.red.concat(this.blue))
+		this.blue = []
+		this.red = []
+		for (let i = 0; i < playerPool.length; i++) {
+			this.addPlayer(playerPool[i].name, playerPool[i].id)
+		}
+	}
+
+	shufflePlayers(player) {
+		let counter = player.length
+		while (counter > 0) {
+			let index = Math.floor(Math.random() * counter)
+			counter --;
+			let temp = player[counter]
+			player[counter] = player[index]
+			player[index] = temp
+		}
+		return player
+	}
+
 	removeByID(id) {
 		for (let i = 0; i < this.red.length; i++) {
 			if (this.red[i].id === id) {

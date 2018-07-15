@@ -19,12 +19,12 @@ let turn = 'blue'
 const nicknames = []
 
 io.on('connection', function (socket) {
-	const connectedIDs = Object.keys(io.of('/').clients().connected)
+	// const connectedIDs = Object.keys(io.of('/').clients().connected)
 	const names = []
 
 	socket.join('game')
 	//Get list of client ids connected
-	console.log(connectedIDs)
+	// console.log(connectedIDs)
 
 	io.sockets.emit('getBoard', board.words)
 	io.sockets.emit('getAllUsers', nicknames)
@@ -34,7 +34,7 @@ io.on('connection', function (socket) {
 	// console.log(io.sockets.adapter.rooms['game'].sockets)
 
 	socket.on('disconnect', function() {
-		console.log('user disconnected');
+		// console.log('user disconnected');
 		const index = nicknames.indexOf(socket.nickname)
 		if (index !== -1) {
 			nicknames.splice(nicknames.indexOf(socket.nickname), 1)
@@ -60,7 +60,7 @@ io.on('connection', function (socket) {
 			socket.nickname = data
 			nicknames.push(socket.nickname)
 			team.addPlayer(socket.nickname, socket.id)
-			console.log(team)
+			// console.log(team)
 			io.sockets.emit('getAllUsers', nicknames)
 			io.sockets.emit('getTeams', team)
 			io.sockets.emit('getTurn', turn)
@@ -91,7 +91,17 @@ io.on('connection', function (socket) {
 	socket.on('newGame', function () {
 		board.createNewBoard()
 		team.incrementSpymaster()
-		console.log(team)
+		// console.log(team)
+		io.sockets.emit('getBoard', board.words)
+		io.sockets.emit('getAllUsers', nicknames)
+		io.sockets.emit('getTeams', team)
+		io.sockets.emit('getTurn', turn)
+	})
+
+	socket.on('randomTeams', function () {
+		board.createNewBoard()
+		team.createNewTeams()
+		// console.log(team)
 		io.sockets.emit('getBoard', board.words)
 		io.sockets.emit('getAllUsers', nicknames)
 		io.sockets.emit('getTeams', team)

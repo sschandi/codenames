@@ -4,31 +4,6 @@ class Board {
 	
 	constructor() {
 		this.words = this.createBoard()
-		this.didRedWin = function () {
-			let win = 0
-			for (let i = 0; i < this.words; i++) {
-				if (this.words[i].show && this.words[i].type === 'red') {
-					win += 1
-				}
-			}
-			if (win === 8) {
-				return true
-			}
-			return false
-		}
-	}
-
-	static didBlueWin() {
-		let win = 0
-		for (let i = 0; i < this.words; i++) {
-			if (this.words[i].show && this.words[i].type === 'blue') {
-				win += 1
-			}
-		}
-		if (win === 9) {
-			return true
-		}
-		return false
 	}
 
 	createBoard() {
