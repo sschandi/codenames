@@ -2,12 +2,11 @@
 	<div id="game">
 		<p v-if="turn">Your turn</p>
 		<p v-else>Enemy's Turn</p>
-		<div class="container">
-			<p>
-				You are 
-				<span v-if="spymaster">the {{ team }} spymaster</span>
-				<span v-else>a {{ team }} player</span></p>
-		</div>
+		<p>
+			You are 
+			<span v-if="spymaster">the {{ team }} spymaster</span>
+			<span v-else>a {{ team }} player</span></p>
+		<slot name="actions"/>
 		<div class="container">
 			<div 
 				v-for="card in board" 

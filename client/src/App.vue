@@ -1,23 +1,34 @@
 <template>
   <div id="app">
     <h1>Codenames</h1>
-    <p v-if="isConnected">We are connected {{ users }}</p>
+    <!-- <p v-if="isConnected">We are connected {{ users }}</p> -->
     <p>{{ error }}</p>
-    <button @click="newGame()">newGame</button>
-    <button @click="randomTeams()">newGame shuffle teams</button>
-    <button v-if="isTurn && !isSpyMaster" @click="endTurn()">End Turn</button>
     <div v-if="showGame == false">
       <input v-model="nickname" type="text" placeholder="enter nick name"/>
       <button @click="setName()">Set</button>
     </div>
     <div v-else>
-      <p>Hello: {{ nickname }}</p>
-    </div>
-    <div v-if="teams" v-for="red in redTeam" :key="red.id">
-      <p>red: {{ red }}</p>
-    </div>
-    <div v-if="teams" v-for="blue in blueTeam" :key="blue.id">
-      <p>blue: {{ blue }}</p>
+      <h3>Hello {{ nickname }}</h3>
+      <div class="container">
+        <div class="team-blue">
+          <h2>Blue Team</h2>
+          <p v-if="teams" v-for="blue in blueTeam" :key="blue.id">
+            {{ blue.name }}:
+            <span v-if="blue.isSpyMaster">Spymaster</span>
+            <span v-else>Player</span>
+            <span v-if="blue.id === id">(YOU)</span>
+          </p>
+        </div>
+        <div class="team-red">
+          <h2>Red Team</h2>
+          <p v-if="teams" v-for="red in redTeam" :key="red.id">
+            {{ red.name }}:
+            <span v-if="red.isSpyMaster">Spymaster</span>
+            <span v-else>Player</span>
+            <span v-if="red.id === id">(YOU)</span>
+          </p>
+        </div>
+      </div>
     </div>
     <!-- <button @click="getBoard()">getBoard</button>
     <button @click="getAllUsers()">UsersGet</button> -->
@@ -29,7 +40,15 @@
         :turn="isTurn"
         :team="team"
         @show-card="showCard"
-      />
+      >
+        <template slot="actions">
+          <div class="container actions">
+            <button @click="newGame()">New Game</button>
+            <button @click="randomTeams()">New Game New Teams</button>
+            <button v-if="isTurn && !isSpyMaster" class="turn-button" @click="endTurn()">End Turn</button>
+          </div>
+        </template>
+      </Game>
     </template>
     <router-view/>
   </div>
@@ -166,6 +185,7 @@ $blue: #0074e4;
 $innocent: #404b69;
 $assasin: #283149;
 $default: #dbedf3;
+$white: #ffffff;
 
 body {
   font-family: $font;
@@ -173,6 +193,7 @@ body {
 #app {
   text-align: center;
   color: $assasin;
+  padding-bottom: 2em;
 }
 .container {
   min-width: 500px;
@@ -183,7 +204,37 @@ body {
   flex-wrap: wrap;
   justify-content: center;
 }
+.team-red {
+  width: 40%;
+  padding: 0 2.5% 2.5% 2.5%;
+  margin: 2.5%;
+  background-color: $red;
+  color: $white;
+}
+.team-blue {
+  width: 40%;
+  padding: 0 2.5% 2.5% 2.5%;
+  margin: 2.5%;
+  background-color: $blue;
+  color: $white;
+}
 .row {
 
+}
+.actions {
+  justify-content: flex-start;
+}
+button {
+  color: $default;
+  background-color: $innocent;
+  border: none;
+  padding: 1em;
+  margin: .5em .5em .5em 0;
+}
+.turn-button {
+  background-color: $assasin;
+}
+input {
+  padding: 1em;
 }
 </style>
