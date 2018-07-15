@@ -3,9 +3,9 @@
     <h1>Codenames</h1>
     <p v-if="isConnected">We are connected {{ users }}</p>
     <p>{{ error }}</p>
-    <p v-if="users.length < 4">Don't try to play this without 4 people ok. Waiting for 4 players...</p>
     <button @click="newGame()">newGame</button>
     <button @click="randomTeams()">newGame shuffle teams</button>
+    <button v-if="isTurn && !isSpyMaster" @click="endTurn()">End Turn</button>
     <div v-if="showGame == false">
       <input v-model="nickname" type="text" placeholder="enter nick name"/>
       <button @click="setName()">Set</button>
@@ -27,6 +27,7 @@
         :gameBoard="gameBoard" 
         :spymaster="isSpyMaster"
         :turn="isTurn"
+        :team="team"
         @show-card="showCard"
       />
     </template>
@@ -137,9 +138,14 @@ export default {
     },
     newGame: function () {
       this.$socket.emit('newGame')
+      this.$socket.emit('getSelf')
     },
     randomTeams: function () {
       this.$socket.emit('randomTeams')
+      this.$socket.emit('getSelf')
+    },
+    endTurn: function () {
+      this.$socket.emit('endTurn')
     },
     showCard: function (card) {
       for (let i = 0; i < this.gameBoard.length; i++) {

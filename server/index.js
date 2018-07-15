@@ -30,7 +30,7 @@ io.on('connection', function (socket) {
 	io.sockets.emit('getAllUsers', nicknames)
 	io.sockets.emit('getTeams', team)
 
-	console.log('a user connected')
+	// console.log('a user connected')
 	// console.log(io.sockets.adapter.rooms['game'].sockets)
 
 	socket.on('disconnect', function() {
@@ -76,6 +76,15 @@ io.on('connection', function (socket) {
 		sockets.emit('getTurn', turn)
 	})
 
+	socket.on('endTurn', function () {
+		if (turn === 'blue') {
+			turn = 'red'
+		} else {
+			turn = 'blue'
+		}
+		io.sockets.emit('getTurn', turn)
+	})
+
 	socket.on('getSelf', function () {
 		const teamColor = team.getTeam(socket.id)
 		const isSpy = team.getIsSpy(socket.id)
@@ -92,6 +101,7 @@ io.on('connection', function (socket) {
 		board.createNewBoard()
 		team.incrementSpymaster()
 		// console.log(team)
+		turn = 'blue'
 		io.sockets.emit('getBoard', board.words)
 		io.sockets.emit('getAllUsers', nicknames)
 		io.sockets.emit('getTeams', team)
@@ -102,6 +112,7 @@ io.on('connection', function (socket) {
 		board.createNewBoard()
 		team.createNewTeams()
 		// console.log(team)
+		turn = 'blue'
 		io.sockets.emit('getBoard', board.words)
 		io.sockets.emit('getAllUsers', nicknames)
 		io.sockets.emit('getTeams', team)

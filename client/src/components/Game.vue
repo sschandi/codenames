@@ -1,10 +1,12 @@
 <template>
 	<div id="game">
-		<h1>Game</h1>
 		<p v-if="turn">Your turn</p>
 		<p v-else>Enemy's Turn</p>
 		<div class="container">
-			<p>You are <span v-if="spymaster">the spymaster</span><span v-else>a player</span></p>
+			<p>
+				You are 
+				<span v-if="spymaster">the {{ team }} spymaster</span>
+				<span v-else>a {{ team }} player</span></p>
 		</div>
 		<div class="container">
 			<div 
@@ -25,6 +27,7 @@ export default {
 		gameBoard: Array,
 		spymaster: Boolean,
 		turn: Boolean,
+		team: String,
 	},
 	data () {
 		return {
