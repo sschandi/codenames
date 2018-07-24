@@ -84,7 +84,7 @@ io.on('connection', function (socket) {
 		}
 		io.sockets.emit('getTurn', turn)
 	})
-
+// coment for fun
 	socket.on('getSelf', function () {
 		const teamColor = team.getTeam(socket.id)
 		const isSpy = team.getIsSpy(socket.id)
