@@ -1,7 +1,7 @@
 # codenames
 Codenames Web Socket App
 
-## [Demo](https://codenames.netlify.com/) here.
+## [Demo](https://codenames.netlify.com/).
 
 # Features
 * Randomize teams
